@@ -46,7 +46,7 @@ fi
 verify_no_ip_record_updater_pid() {
     # Make sure the pid corresponds to the Process.
     pid=`cat ${no_ip_record_updater_pid} 2>/dev/null`
-    ps -p ${pid} | grep -q "ruby ${no_ip_record_updater_dir}/no_ip_record_updater"
+    ps -p ${pid} | grep -q "ruby ${no_ip_record_updater_dir}/bin/no_ip_record_updater"
     return $?
 }
 
