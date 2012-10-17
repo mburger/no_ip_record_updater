@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+
+require 'yaml'
+require 'optparse'
+require 'no_ip_record_updater'
+require 'no_ip_record_updater/cli/run'
+
+options           = { :daemonize => false }
+required_options  = [:username, :password, :record, :contact_address, :check_ip_uri, :interval]
+
+opts = OptionParser.new do |opts|
+  opts.banner = <<-EOF
+Usage:
+  no_ip_record_updater [-c <config file> ] [-d]
+
+Options:
+  EOF
+  opts.on("-cCONFIG", "--config-file CONFIG", "Configuration File") do |op|
+    options[:config]    = op
+  end
+  opts.on("-d", "--daemonize", "Daemonize") do |op|
+    options[:daemonize] = op
+  end
+  opts.on("-h", "--help", "Show this Message") do |op|
+    puts opts
+  end
+end
+
+opts.parse!
+
+if options[:config].nil?
+  puts "Missing option: --config-file"
+  raise OptionParser::MissingArgument
+end
+
+if File.exists?(options[:config])
+  options.merge!(YAML::load_file(options[:config]))
+else
+  puts "Specified Config File: #{options[:config]} does not exist!"
+  exit
+end
+
+required_options.each do |option|
+  if options[option].nil?
+  puts "Missing Config File Entry: #{option}"
+  raise OptionParser::MissingArgument
+  end
+end
+
+NoIpRecordUpdater::CLI::Run.new(options)

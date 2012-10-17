@@ -1,0 +1,7 @@
+---
+:username: user
+:password: pass
+:record: record.no-ip.org
+:contact_address: user@host
+:check_ip_uri: http://automation.whatismyip.com/n09230945.asp
+:interval: 300
